@@ -1,3 +1,5 @@
+import plagas.*
+
 class Barrio{
 	const property elementos = []
 	
@@ -8,9 +10,9 @@ class Barrio{
 		elementos.remove(unElemento)
 	}
 	
-	method esElementoBueno(unElemento)= unElemento.esBueno()
+	method cantidadElementosBuenos()= elementos.count({e=> e.esBueno()})
 	
-	method esCopado()= elementos.count({e=> e.esBueno()}) > elementos.size() / 2
+	method esCopado()= self.cantidadElementosBuenos() > elementos.size() / 2
 }
 
 
@@ -19,18 +21,36 @@ class Hogar {
 	var property confort
 	
 	method esBueno()= nivelDeMugre <= confort / 2
+	
+	method recibirAtaque(unaPlaga){
+		nivelDeMugre += unaPlaga.nivelDeDanio()
+	}
 }
 
 class Huerta {
 	var property capacidadProduccionMensual
+	var property nivelDeProduccion = produccion
 	
-	method esBueno()= capacidadProduccionMensual > produccion.produccionBuena()
+	method esBueno()= capacidadProduccionMensual > nivelDeProduccion.produccionBuena()
+	
+	method recibirAtaque(unaPlaga){
+		capacidadProduccionMensual = 0.max(capacidadProduccionMensual - unaPlaga.nivelDeDanio() * 0.1 )
+		if(unaPlaga.transmiteEnfermedades()){
+			capacidadProduccionMensual = 0.max(capacidadProduccionMensual - 10)
+		}
+	}
 }
 
 class Mascota {
 	var property nivelDeSalud
 	
 	method esBueno()= nivelDeSalud > 250
+	
+	method recibirAtaque(unaPlaga){
+		if(unaPlaga.transmiteEnfermedades()){
+		nivelDeSalud = 0.max(nivelDeSalud - unaPlaga.nivelDeDanio())
+		}		
+	}
 }
 
 

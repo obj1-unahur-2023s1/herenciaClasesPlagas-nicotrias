@@ -1,41 +1,46 @@
-class Cucarachas{
+import elementos.*
+
+class Plaga{
+	var property poblacion 
+	
+		method transmiteEnfermedades()= poblacion >= 10
+		method atacar(unElemento){
+			unElemento.recibirAtaque(self)
+			poblacion *= 1.1
+		}
+}
+
+
+class Cucaracha inherits Plaga{
 	var property pesoPromedio
-	var property poblacion
 	
-	method transmiteEnfermedades()=  pesoPromedio >= 10 and enfermedad.transmiteEnfermedades(poblacion)
+	override method transmiteEnfermedades()= super()  and pesoPromedio >= 10 
 	method nivelDeDanio()= poblacion / 2
-
+	override method atacar(unElemento){
+		super(unElemento)
+		pesoPromedio += 2
+	}
 }
 
-class Pulga{
-	var property poblacion
+class Pulga inherits Plaga{
 	
-	method transmiteEnfermedades()=   enfermedad.transmiteEnfermedades(poblacion)
 	method nivelDeDanio()= poblacion *2
 
 }
 
-class Garrapata{
-	var property poblacion
+class Garrapata inherits Pulga{
+	override method atacar(unElemento){
+		unElemento.recibirAtaque(self)
+		poblacion *= 1.2
 	
-	method transmiteEnfermedades()=   enfermedad.transmiteEnfermedades(poblacion)
-	method nivelDeDanio()= poblacion *2
+	}
 
 }
 
-class Mosquito{
-	var property poblacion
+class Mosquito inherits Plaga{
 	
-	
-	method transmiteEnfermedades()= poblacion % 3 == 0  and enfermedad.transmiteEnfermedades(poblacion)
+	override method transmiteEnfermedades()= super() and poblacion % 3 == 0  
 	method nivelDeDanio()= poblacion
 
 }
 
-
-
-
-object enfermedad{
-	
-	method transmiteEnfermedades(poblacion)= poblacion >= 10
-}
